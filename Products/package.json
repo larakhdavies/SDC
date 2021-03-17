@@ -1,0 +1,19 @@
+{
+  "name": "products",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server -w"
+  },
+  "author": "SDC-javascript",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node": "^15.10.0",
+    "nodemon": "^2.0.7",
+    "pg": "^8.5.1",
+    "postgres": "^1.0.2"
+  }
+}

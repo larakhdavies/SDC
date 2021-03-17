@@ -1,5 +1,5 @@
 
-\COPY related_products(id, product_id, related_product_id) FROM '/Users/laradavies/Desktop/related.csv' DELIMITER ',' CSV HEADER;
+-- \COPY style_photos(photo_id, style_id, photo_url, thumbnail_url) FROM '/Users/laradavies/Desktop/photos.csv' DELIMITER ',' CSV HEADER;
 
 -- CREATE TABLE products_general (
 -- 	product_id INT NOT NULL,
@@ -7,8 +7,8 @@
 -- 	slogan VARCHAR ( 500 ),
 -- 	product_description VARCHAR ( 500 ),
 -- 	category VARCHAR ( 50 ),
---   default_price INT,
---   PRIMARY KEY(product_id)
+--  default_price INT,
+--  PRIMARY KEY(product_id)
 -- );
 
 -- CREATE TABLE related_products (
@@ -22,11 +22,12 @@
 
 -- CREATE TABLE products_styles (
 -- 	style_id INT NOT NULL,
+--   product_id INT,
 -- 	style_name VARCHAR ( 50 ),
---   original_price INT,
 --   sale_price INT,
---   default_bool BOOLEAN,
---   PRIMARY KEY(style_id)
+--   original_price INT,
+--   default_style BOOLEAN,
+--   PRIMARY KEY(style_id),
 --   CONSTRAINT style_fk
 --     FOREIGN KEY (product_id)
 --       REFERENCES products_general(product_id)
@@ -36,20 +37,21 @@
 -- 	id INT NOT NULL,
 -- 	style_id INT,
 --   size VARCHAR ( 50 ),
---   quantity VARCHAR ( 50 )
---   PRIMARY KEY(id)
+--   quantity VARCHAR ( 50 ),
+--   PRIMARY KEY(id),
 --   CONSTRAINT sku_fk
 --     FOREIGN KEY (style_id)
 --       REFERENCES products_styles(style_id)
 -- );
 
 -- CREATE TABLE style_photos (
--- 	id INT NOT NULL,
+-- 	id SERIAL,
+--   photo_id INT NOT NULL,
 -- 	style_id INT,
---   thumbnail_url VARCHAR ( 250 ),
---   photo_url VARCHAR ( 250 )
---   PRIMARY KEY(id)
---   CONSTRAINT photo_fk
+--  photo_url VARCHAR ( 1000 ),
+--  thumbnail_url VARCHAR,
+--  PRIMARY KEY(id),
+--  CONSTRAINT photo_fk
 --     FOREIGN KEY (style_id)
 --       REFERENCES products_styles(style_id)
 -- );
