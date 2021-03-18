@@ -1,5 +1,5 @@
 
--- \COPY style_photos(photo_id, style_id, photo_url, thumbnail_url) FROM '/Users/laradavies/Desktop/photos.csv' DELIMITER ',' CSV HEADER;
+-- \COPY features(id, product_id, feature, valueAttr) FROM '/Users/laradavies/Desktop/features.csv' DELIMITER ',' CSV HEADER;
 
 -- CREATE TABLE products_general (
 -- 	product_id INT NOT NULL,
@@ -55,3 +55,16 @@
 --     FOREIGN KEY (style_id)
 --       REFERENCES products_styles(style_id)
 -- );
+
+-- CREATE TABLE features (
+--   id INT NOT NULL,
+--   product_id INT NOT NULL,
+--   feature VARCHAR ( 250 ),
+--   valueAttr VARCHAR ( 250 ),
+--   PRIMARY KEY (id),
+--   CONSTRAINT feature_fk
+--     FOREIGN KEY (product_id)
+--       REFERENCES products_general(product_id)
+-- )
+
+-- ALTER TABLE products_general DROP features_;
