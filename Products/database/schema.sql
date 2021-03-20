@@ -35,6 +35,8 @@ CREATE TABLE products_styles (
       REFERENCES products_general(product_id)
 );
 
+CREATE INDEX ix_ps_product_id ON products_styles (product_id);
+
 \COPY products_styles(style_id, product_id, style_name, sale_price, original_price, default_style) FROM '/Users/laradavies/Desktop/styles.csv' DELIMITER ',' null as 'null' CSV HEADER;
 
 CREATE TABLE style_skus (
@@ -47,6 +49,8 @@ CREATE TABLE style_skus (
     FOREIGN KEY (style_id)
       REFERENCES products_styles(style_id)
 );
+
+CREATE INDEX ix_ss_style_id ON style_skus (style_id);
 
 \COPY style_skus(id, style_id, size, quantity) FROM '/Users/laradavies/Desktop/skus.csv' DELIMITER ',' CSV HEADER;
 
@@ -61,6 +65,8 @@ CREATE TABLE style_photos (
     FOREIGN KEY (style_id)
       REFERENCES products_styles(style_id)
 );
+
+CREATE INDEX ix_sp_style_id ON style_photos (style_id);
 
 \COPY style_photos(photo_id, style_id, photo_url, thumbnail_url) FROM '/Users/laradavies/Desktop/photos.csv' DELIMITER ',' CSV HEADER;
 
