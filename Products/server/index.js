@@ -9,8 +9,6 @@ app.get('/products/:product_id', dbQuery.getProductsById);
 
 app.get('/products/:product_id/styles', dbQuery.getProductStyle);
 
-app.get('/products/:product_id/photos', dbQuery.getproductPhotos);
-
 app.get('/products/:product_id/related', dbQuery.getProductsRelated);
 
 app.listen(port, () => {

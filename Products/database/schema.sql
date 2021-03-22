@@ -9,6 +9,8 @@ CREATE TABLE products_general (
  PRIMARY KEY(product_id)
 );
 
+CREATE INDEX ix_pg_cproduct_id ON products_general (product_id);
+
 \COPY products_general(product_id, product_name, slogan, product_description, category, default_price) FROM '/Users/laradavies/Desktop/product.csv' DELIMITER ',' CSV HEADER;
 
 CREATE TABLE related_products (
@@ -19,6 +21,8 @@ CREATE TABLE related_products (
   FOREIGN KEY (current_product_id)
     REFERENCES products_general(product_id)
 );
+
+CREATE INDEX ix_rp_current_product_id ON related_products (current_product_id);
 
 \COPY related_products(id, current_product_id, related_product_id) FROM '/Users/laradavies/Desktop/related.csv' DELIMITER ',' CSV HEADER;
 
@@ -80,5 +84,7 @@ CREATE TABLE features (
     FOREIGN KEY (product_id)
       REFERENCES products_general(product_id)
 )
+
+CREATE INDEX ix_feat_product_id ON features (product_id);
 
 \COPY features(id, product_id, feature, valueAttr) FROM '/Users/laradavies/Desktop/features.csv' DELIMITER ',' CSV HEADER;
