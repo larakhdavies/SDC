@@ -1,5 +1,6 @@
-const express = require('express')
-const dbQuery = require('../database/dbQueries.js')
+const relic = require('newrelic');
+const express = require('express');
+const dbQuery = require('../database/dbQueries.js');
 const app = express();
 const port = 3000;
 

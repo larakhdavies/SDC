@@ -98,24 +98,25 @@ const getProductStyle = function (req, res) {
     getPhotosQuery(id)
   ])
   .then(([styles, skus, photos]) => {
-    debugger;
+    let styleMap = new Map();
     styles.rows.forEach((styleRow) => {
-      const skuArr= {};
-      skus.rows.forEach((sku) =>{
-        if (styleRow.style_id === sku.style_id) {
-          skuArr[sku.id] = {quantity:sku.quantity, size:sku.size};
-        }
-      })
-      styleRow['skus'] = skuArr;
-    });
-    styles.rows.forEach((styleRow) => {
-      const photosArr = [];
-      photos.rows.forEach((photoRow) => {
-        if(photoRow.style_id === styleRow.style_id) {
-          photosArr.push(photoRow)
-        }
-      })
-      styleRow["photos"] = photosArr;
+      styleMap.set(styleRow.style_id, styleRow);
+    })
+    skus.rows.forEach((sku) => {
+      const styleRow = styleMap.get(sku.style_id);
+      if (styleRow.skus === undefined) {
+        styleRow.skus = {};
+      }
+      const skusObj = styleRow.skus;
+      skusObj[sku.id] = {quantity:sku.quantity, size:sku.size};
+    })
+    photos.rows.forEach((photo) => {
+      const styleRow = styleMap.get(photo.style_id)
+      if(styleRow.photos === undefined){
+        styleRow.photos = [];
+      }
+      const photosArr = styleRow.photos;
+      photosArr.push(photo);
     })
     let results = {};
     results["product_id"] = id;
