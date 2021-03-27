@@ -1,4 +1,16 @@
 const db = require('./connection.js');
+const redis = require('redis');
+
+const REDIS_PORT = 6379;
+
+const config = {
+        host: '172.31.3.26',
+        port: 6379
+}
+
+const redisClient = redis.createClient(config);
+
+redisClient.on('connect', () => { console.log('redis connected') });
 
 const getFeatures = function (id) {
   let featuresQuery = `SELECT
@@ -72,16 +84,34 @@ const getProducts = function (req, res) {
 
 const getProductsById = function (req, res) {
   let id = Number(req.params.product_id)
+  let key = 'product/' + id;
+  redisClient.get(key, (err, results) => {
+    if (err) {
+      res.send(err)
+    } else {
+      if (results) {
+        res.send(JSON.parse(results))
+      } else {
+        getProductsByIdNoCache(id, res);
+      }
+    }
+  })
+}
+
+const getProductsByIdNoCache = function (id, res) {
   getFeatures(id)
   .then((features) => {
     getProductsFunc(id)
-    .then((produtcs) => {
+    .then((products) => {
       let featuresArr = features.rows;
       if (featuresArr === []) {
-        res.send(produtcs.rows);
+        res.send(products.rows);
       }
-      produtcs.rows[0]['features'] = featuresArr;
-      res.send(produtcs.rows);
+      products.rows[0]['features'] = featuresArr;
+      //set cache
+      let key = 'product/' + id;
+      redisClient.set(key, JSON.stringify(products.rows))
+      res.send(products.rows);
     })
   })
   .catch((error) => {
@@ -91,7 +121,23 @@ const getProductsById = function (req, res) {
 
 const getProductStyle = function (req, res) {
   let id = Number(req.params.product_id);
-  debugger;
+  //check cache
+  let key = 'styles/' + id;
+  redisClient.get(key, (err, results) => {
+    if (err) {
+      throw err
+    } else {
+      if (results) {
+        res.send(JSON.parse(results))
+        return;
+      } else {
+        getStylesNoCache(id, res);
+      }
+    }
+  })
+}
+
+const getStylesNoCache = function(id, res) {
   Promise.all([
     getStylesQuery(id),
     getSkusQuery(id),
@@ -121,18 +167,40 @@ const getProductStyle = function (req, res) {
     let results = {};
     results["product_id"] = id;
     results["results"] = styles.rows;
+
+    //set cache
+    let key = 'styles/' + id;
+    redisClient.set(key, JSON.stringify(results));
     res.send(results);
   })
 }
 
 const getProductsRelated = function (req, res) {
   let id = Number(req.params.product_id);
+  let key = 'related/' + id;
+  redisClient.get(key, (err, results) => {
+    if (err){
+      res.send(err);
+    } else {
+      if (results) {
+        res.send(JSON.parse(results))
+      } else {
+        getRelatedNoCache(id, res);
+      }
+    }
+  })
+}
+
+const getRelatedNoCache = function (id, res) {
   getRelatedQueries(id)
   .then((data) => {
     relatedProductsArr = [];
     data.rows.forEach((row) => {
       relatedProductsArr.push(row.related_product_id);
     })
+    //set cache
+    let key = 'related/' + id;
+    redisClient.set(key, JSON.stringify(relatedProductsArr));
     res.send(relatedProductsArr);
   })
   .catch((error) => {

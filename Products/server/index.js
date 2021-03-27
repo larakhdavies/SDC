@@ -13,5 +13,5 @@ app.get('/products/:product_id/styles', dbQuery.getProductStyle);
 app.get('/products/:product_id/related', dbQuery.getProductsRelated);
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Example app listening at laras computer ${port}`)
 })
