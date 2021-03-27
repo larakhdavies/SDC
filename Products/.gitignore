@@ -1,1 +1,6 @@
-./server/newrelic.js
+server/newrelic.js
+
+node_modules
+
+newrelic_agent.log
+
